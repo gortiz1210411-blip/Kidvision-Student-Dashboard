@@ -69,10 +69,11 @@ export async function POST(req: Request) {
     if (insertError) {
       console.error("Supabase insert error:", insertError);
       const details = JSON.parse(JSON.stringify(insertError));
+      const message =
+        (insertError as any)?.message || details?.message || JSON.stringify(details) || "Insert failed";
       return NextResponse.json(
         {
-          error:
-            (insertError as any)?.message || (details && details.message) || "Insert failed",
+          error: message,
           details,
         },
         { status: 500 },
@@ -89,8 +90,9 @@ export async function POST(req: Request) {
     console.error("FAST Math upload failed:", err);
     const msg = err instanceof Error ? err.message : String(err);
     const details = err && typeof err === "object" ? JSON.parse(JSON.stringify(err)) : undefined;
+    const message = msg || (details && (details as any).message) || (details ? JSON.stringify(details) : "Upload failed");
     return NextResponse.json(
-      { error: msg ?? "Upload failed", details },
+      { error: message, details },
       { status: 500 },
     );
   }
