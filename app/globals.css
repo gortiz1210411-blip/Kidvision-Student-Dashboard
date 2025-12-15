@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -------------------------
+   KIDVISION THEME VARIABLES
+   ------------------------- */
+:root {
+  --kv-blue: #2a4cff; /* Hydro Blue */
+  --kv-pink: #ff2e80; /* Hot Pink */
+  --kv-sky: #7db7ff; /* Soft Sky Blue */
+  --kv-bg: #f7f9fc; /* Clean Light Background */
+  --kv-text: #1a1a1a; /* Charcoal Text */
+}
+
+/* -------------------------
+   GLOBAL BODY STYLES
+   ------------------------- */
+body {
+  background-color: var(--kv-bg) !important;
+  color: var(--kv-text);
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensures links inherit color unless styled */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Better heading alignment and spacing */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Optional: Smooth transitions everywhere */
+* {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Ensure app layout does not collapse */
+html,
+body {
+  min-height: 100%;
+}
+
+/* Scrollbar (optional, looks clean) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--kv-blue);
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--kv-pink);
+}

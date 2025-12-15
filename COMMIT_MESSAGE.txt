@@ -1,0 +1,64 @@
+# Commit Message
+
+## Summary
+Complete TypeScript/ESLint fixes, runtime validation, and CI/CD setup for kidvision-student-dashboard.
+
+## Changes
+
+### Core Fixes
+- **Type Safety**: Replaced all explicit `any` usages with safe, minimal types:
+  - Introduced small interfaces (`Assessment`, `MathRow`, `AssessmentSmall`) for data structures
+  - Used `Record<string, unknown>` for parsed CSV/Excel rows
+  - Changed error handling to use `unknown` with safe extraction (`err instanceof Error`)
+  
+- **Module Errors**: Fixed empty page files causing Next.js module type errors:
+  - Added default React components to `app/teacher/dashboard/assessments/page.tsx`
+  - Added placeholder pages for `reading` and `science` assessments
+
+- **API Route**: Fixed `app/api/students/route.ts` to export a proper GET handler instead of a helper function
+
+- **Environment Variables**: Improved `utils/supabaseServer.ts` to accept multiple common Supabase env var names with clearer error messages
+
+### Runtime Validation
+- **Added zod dependency** for schema-based validation
+- **Created `utils/validators.ts`** with schemas:
+  - `FastMathRowSchema`, `StarMathRowSchema`, `UnitMathRowSchema`, `QuizMathRowSchema`, `RosterRowSchema`
+  - `validateRows()` helper that separates valid from invalid rows and returns structured errors
+  
+- **Integrated validators into upload routes**:
+  - `app/api/upload/fast-math/route.ts`
+  - `app/api/upload/star-math/route.ts`
+  - `app/api/upload/quiz-math/route.ts`
+  - `app/api/upload/unit-math/route.ts`
+  - `app/api/upload-roster/route.ts`
+  
+- All upload endpoints now return `{ inserted: number, invalidRows: number, errors: array }` to help users debug malformed data
+
+### Development & CI
+- **Added Prettier** for code formatting (dev dependency)
+- **Added format script**: `npm run format` to auto-format code
+- **GitHub Actions CI workflow** (`.github/workflows/ci.yml`):
+  - Runs on push to `main`/`master` and all PRs
+  - Tests against Node 18.x and 20.x
+  - Executes `npm ci`, `npm run lint`, `npm run build`
+  - Uploads `.next` build artifact on success
+
+### Documentation
+- **Created `.env.example`**: Template for required Supabase environment variables
+- **Updated `README.md`**: Added local setup and build instructions (Windows-friendly)
+- **Created `USAGE.md`**: Quick start guide for developers, including upload testing and recommendations
+
+## Build Status
+- ✅ `npm run lint` — 0 errors
+- ✅ `npm run build` — succeeds with TypeScript check passing
+- ✅ All routes compile and type-check
+
+## Testing Recommendations
+1. Copy `.env.example` → `.env.local`, add your Supabase keys
+2. Run `npm install && npm run dev`
+3. Test CSV uploads to verify validation error messages
+
+## Next Steps (Optional)
+- Add stricter per-column date/number parsing in validators
+- Add unit tests for upload route handlers
+- Consider adding Sentry or similar for error tracking in production
