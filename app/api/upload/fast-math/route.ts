@@ -68,10 +68,12 @@ export async function POST(req: Request) {
 
     if (insertError) {
       console.error("Supabase insert error:", insertError);
+      const details = JSON.parse(JSON.stringify(insertError));
       return NextResponse.json(
         {
-          error: insertError.message || "Insert failed",
-          details: insertError,
+          error:
+            (insertError as any)?.message || (details && details.message) || "Insert failed",
+          details,
         },
         { status: 500 },
       );
@@ -86,12 +88,7 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     console.error("FAST Math upload failed:", err);
     const msg = err instanceof Error ? err.message : String(err);
-    const details =
-      err && typeof err === "object"
-        ? JSON.parse(
-            JSON.stringify(err, Object.getOwnPropertyNames(err as object)),
-          )
-        : undefined;
+    const details = err && typeof err === "object" ? JSON.parse(JSON.stringify(err)) : undefined;
     return NextResponse.json(
       { error: msg ?? "Upload failed", details },
       { status: 500 },
