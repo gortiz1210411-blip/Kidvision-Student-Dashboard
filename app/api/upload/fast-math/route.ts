@@ -66,7 +66,16 @@ export async function POST(req: Request) {
       .from("student_assessments")
       .insert(payload);
 
-    if (insertError) throw insertError;
+    if (insertError) {
+      console.error("Supabase insert error:", insertError);
+      return NextResponse.json(
+        {
+          error: insertError.message || "Insert failed",
+          details: insertError,
+        },
+        { status: 500 },
+      );
+    }
 
     return NextResponse.json({
       success: true,
@@ -77,8 +86,14 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     console.error("FAST Math upload failed:", err);
     const msg = err instanceof Error ? err.message : String(err);
+    const details =
+      err && typeof err === "object"
+        ? JSON.parse(
+            JSON.stringify(err, Object.getOwnPropertyNames(err as object)),
+          )
+        : undefined;
     return NextResponse.json(
-      { error: msg ?? "Upload failed" },
+      { error: msg ?? "Upload failed", details },
       { status: 500 },
     );
   }
