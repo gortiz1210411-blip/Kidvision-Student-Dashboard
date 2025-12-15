@@ -16,44 +16,48 @@ export const FastMathRowSchema = z.object({
   "Either student_id or kidvision_id is required"
 );
 
-export const StarMathRowSchema = z.object({
-  student_id: z.string().optional(),
-  kidvision_id: z.string().optional(),
-  scale_score: z.optional(
-    z.preprocess(
-      (v) => (v === "" ? undefined : Number(v)),
-      z.number().nullable(),
+export const StarMathRowSchema = z
+  .object({
+    student_id: z.string().optional(),
+    kidvision_id: z.string().optional(),
+    scale_score: z.optional(
+      z.preprocess(
+        (v) => (v === "" ? undefined : Number(v)),
+        z.number().nullable(),
+      ),
     ),
-  ),
-  percentile_rank: z.optional(
-    z.preprocess(
-      (v) => (v === "" ? undefined : Number(v)),
-      z.number().nullable(),
+    percentile_rank: z.optional(
+      z.preprocess(
+        (v) => (v === "" ? undefined : Number(v)),
+        z.number().nullable(),
+      ),
     ),
-  ),
-  level: z.string().optional().nullable(),
-  test_name: z.string().optional().nullable(),
-  date_given: z.string().optional().nullable(),
-}).refine(
-export const UnitMathRowSchema = z.object({
-  student_id: z.string().optional(),
-  kidvision_id: z.string().optional(),
-  score: z.optional(
-    z.preprocess(
-      (v) => (v === "" ? undefined : Number(v)),
-      z.number().nullable(),
+    level: z.string().optional().nullable(),
+    test_name: z.string().optional().nullable(),
+    date_given: z.string().optional().nullable(),
+  })
+  .refine(
+    (obj) => obj.student_id || obj.kidvision_id,
+    "Either student_id or kidvision_id is required",
+  );
+
+export const UnitMathRowSchema = z
+  .object({
+    student_id: z.string().optional(),
+    kidvision_id: z.string().optional(),
+    score: z.optional(
+      z.preprocess(
+        (v) => (v === "" ? undefined : Number(v)),
+        z.number().nullable(),
+      ),
     ),
-  ),
-  test_name: z.string().optional().nullable(),
-  date_given: z.string().optional().nullable(),
-}).refine(
-  (obj) => obj.student_id || obj.kidvision_id,
-  "Either student_id or kidvision_id is required"
-); ),
-  ),
-  test_name: z.string().optional().nullable(),
-  date_given: z.string().optional().nullable(),
-});
+    test_name: z.string().optional().nullable(),
+    date_given: z.string().optional().nullable(),
+  })
+  .refine(
+    (obj) => obj.student_id || obj.kidvision_id,
+    "Either student_id or kidvision_id is required",
+  );
 
 export const QuizMathRowSchema = UnitMathRowSchema;
 
